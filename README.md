@@ -1,0 +1,1 @@
+# openapi-cpp-restsdk-template
