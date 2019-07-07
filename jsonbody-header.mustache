@@ -1,0 +1,55 @@
+{{>licenseInfo}}
+/*
+ * JsonBody.h
+ *
+ * This is a JSON http body which can be submitted via http
+ */
+
+#ifndef {{modelHeaderGuardPrefix}}_JsonBody_H_
+#define {{modelHeaderGuardPrefix}}_JsonBody_H_
+
+{{{defaultInclude}}}
+#include "IHttpBody.h"
+#include "HttpContent.h"
+#include "ModelBase.h"
+
+#include <cpprest/json.h>
+
+{{#modelNamespaceDeclarations}}
+namespace {{this}} {
+{{/modelNamespaceDeclarations}}
+
+class {{declspec}} JsonBody
+    : public IHttpBody
+{
+public:
+    JsonBody( const web::json::value& value );
+    virtual ~JsonBody();
+
+    void writeTo( std::ostream& target ) override;
+
+protected:
+    web::json::value m_Json;
+};
+
+class {{declspec}} OctetStream
+    : public IHttpBody
+{
+public:
+    OctetStream();
+    virtual ~OctetStream();
+
+    void add ( std::shared_ptr<HttpContent> content );
+    void add ( std::shared_ptr<ModelBase> modelbase );
+    void writeTo( std::ostream& target ) override;
+
+protected:
+    std::shared_ptr<HttpContent> m_Content;
+    std::shared_ptr<ModelBase> m_Modelbase;
+};
+
+{{#modelNamespaceDeclarations}}
+}
+{{/modelNamespaceDeclarations}}
+
+#endif /* {{modelHeaderGuardPrefix}}_JsonBody_H_ */

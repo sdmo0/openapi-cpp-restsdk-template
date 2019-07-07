@@ -1,0 +1,50 @@
+{{>licenseInfo}}
+#include "JsonBody.h"
+
+{{#modelNamespaceDeclarations}}
+namespace {{this}} {
+{{/modelNamespaceDeclarations}}
+
+JsonBody::JsonBody( const web::json::value& json)
+    : m_Json(json)
+{
+}
+
+JsonBody::~JsonBody()
+{
+}
+
+void JsonBody::writeTo( std::ostream& target )
+{
+    m_Json.serialize(target);
+}
+
+OctetStream::OctetStream()
+{
+}
+
+OctetStream::~OctetStream()
+{
+}
+
+void OctetStream::add( std::shared_ptr<HttpContent> content )
+{
+    m_Content = content;
+}
+
+void OctetStream::add( std::shared_ptr<ModelBase> modelbase )
+{
+    m_Modelbase = modelbase;
+}
+
+void OctetStream::writeTo( std::ostream& target )
+{
+    if (m_Content == nullptr) throw;
+    
+    m_Content->getData()->seekg( 0, std::ios_base::beg );
+    target << m_Content->getData()->rdbuf();
+}
+
+{{#modelNamespaceDeclarations}}
+}
+{{/modelNamespaceDeclarations}}
